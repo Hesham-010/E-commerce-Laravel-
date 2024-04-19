@@ -21,8 +21,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->integer('sold')->nullable();
 
-            $table->uuid('category_id');
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreignId('sub_categories_id')->constrained('sub_categories')->onDelete('cascade');
 
             $table->timestamps();
         });

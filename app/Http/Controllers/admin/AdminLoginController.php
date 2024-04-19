@@ -17,17 +17,16 @@ class AdminLoginController extends Controller
 
     public function authenticate(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'email' => 'required|email|max:255',
             'password' => 'required',
         ]);
 
-        if ($validator->passes()){
-            if(Auth::guard('admin')->attempt(['email' => $request->email,'password' => $request->password],
-                        $request->get('remember'))){
+        if ($validator->passes()) {
+            if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password],
+                $request->get('remember'))) {
 
-                $admin=Auth::guard('admin')->user();
-
+                $admin = Auth::guard('admin')->user();
                 if ($admin->role == 2){
                     return redirect()->route('admin.dashboard');
                 }else{
@@ -37,10 +36,10 @@ class AdminLoginController extends Controller
             }else {
                 return redirect()->route('admin.login')->with('error','Either Email/Password is invalid');
             }
-        }else{
-            return redirect()->route('admin.login')
-                ->withErrors($validator)
-                ->withInput($request->only('email'));
+            } else {
+                return redirect()->route('admin.login')
+                    ->withErrors($validator)
+                    ->withInput($request->only('email'));
+            }
         }
-    }
 }

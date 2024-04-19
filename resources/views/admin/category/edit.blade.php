@@ -6,7 +6,7 @@
         <div class="container-fluid my-2">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Create Category</h1>
+                    <h1>Edit Category</h1>
                 </div>
                 <div class="col-sm-6 text-right">
                     <a href="{{route('categories')}}" class="btn btn-primary">Back</a>
@@ -19,7 +19,8 @@
     <section class="content">
         <!-- Default box -->
         <div class="container-fluid">
-            <form action="{{route('categories.store')}}" method="post" id="categoryForm" name="categoryForm" enctype="multipart/form-data">
+            <form action="{{route('categories.update',$category->id)}}" method="post" id="categoryForm" name="categoryForm" enctype="multipart/form-data">
+                @method('PUT')
                 @csrf
                 <div class="card">
                     <div class="card-body">
@@ -29,7 +30,7 @@
                                     <label for="name">Title</label>
                                     <input type="text" name="title" id="name" class="form-control @error('title')
                                     is-invalid
-                                    @enderror" placeholder="Category Title">
+                                    @enderror" placeholder="{{$category->title}}">
                                     @error('title')
                                     <p class="invalid-feedback">{{$message}}</p>
                                     @enderror
@@ -41,8 +42,8 @@
                                     <select name="status" id="status" class="form-control @error('status')
                                     is-invalid
                                     @enderror" placeholder="Category Status">
-                                        <option value="1">Active</option>
-                                        <option value="0">Block</option>
+                                        <option {{($category->status == 1) ? 'selected' : ''}} value="1">Active</option>
+                                        <option {{($category->status == 0) ? 'selected' : ''}} value="0">Block</option>
                                     </select>
                                     @error('status')
                                     <p class="invalid-feedback">{{$message}}</p>

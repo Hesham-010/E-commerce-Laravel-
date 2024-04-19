@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -12,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('UUID()'));
-            $table->string('title');
-            $table->string('image')->nullable();
+        Schema::create('sub_categories', function (Blueprint $table) {
+            $table->id()->autoIncrement();
+            $table->string('name');
+            $table->integer('status');
+
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('sub_categories');
     }
 };
