@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Models\User;
-use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,7 +12,7 @@ class CategoryController extends Controller
     {
         $categories = Category::latest();
         if (!empty($request->get('keyword'))) {
-            $keyword = '%' . $request->get('keyword') . '%'; // Concatenate % wildcard
+            $keyword = '%' . $request->get('keyword') . '%';
             $categories = $categories->where('title', 'like', $keyword);
         }
         return view('admin.category.list', [
