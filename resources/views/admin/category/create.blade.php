@@ -19,7 +19,7 @@
     <section class="content">
         <!-- Default box -->
         <div class="container-fluid">
-            <form action="{{route('categories.store')}}" method="post" id="categoryForm" name="categoryForm" enctype="multipart/form-data">
+            <form action="{{route('categories.store')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="card">
                     <div class="card-body">

@@ -13,15 +13,17 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(DB::raw('UUID()'));
             $table->string('title');
-            $table->text('description');
-            $table->string('images');
+            $table->text('description')->nullable();
             $table->string('imageCover');
-            $table->float('price');
+            $table->double('price');
             $table->string('colors');
             $table->integer('quantity');
             $table->integer('sold')->nullable();
+            $table->integer('status')->default(1);
 
             $table->foreignId('sub_categories_id')->constrained('sub_categories')->onDelete('cascade');
+            $table->foreignId('categories_id')->nullable()->constrained('categories')->onDelete('cascade');
+            $table->foreignId('brands_id')->nullable()->constrained('brands')->onDelete('cascade');
 
             $table->timestamps();
         });

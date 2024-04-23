@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -35,9 +36,12 @@ class CategoryController extends Controller
 
         if ($validator->passes()){
 
-            $image = $request->file('image')->getClientOriginalName();
+            $image = $request->file('image');
 
-            $image_path = $request->file('image')->storeAs('categories',$image,'public');
+            $filename = Str::uuid() . '.' . $image->getClientOriginalExtension();
+
+
+            $image_path = $image->storeAs('categories',$filename,'public');
 
             Category::query()->create([
                 'title' => $request->title,
