@@ -11,19 +11,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('UUID()'));
+            $table->id()->autoIncrement();
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('imageCover');
             $table->double('price');
-            $table->string('colors');
+            $table->string('color');
             $table->integer('quantity');
-            $table->integer('sold')->nullable();
+            $table->integer('sold')->default(0);
             $table->integer('status')->default(1);
 
-            $table->foreignId('sub_categories_id')->constrained('sub_categories')->onDelete('cascade');
-            $table->foreignId('categories_id')->nullable()->constrained('categories')->onDelete('cascade');
-            $table->foreignId('brands_id')->nullable()->constrained('brands')->onDelete('cascade');
+            $table->foreignId('sub_category_id')->constrained('sub_categories')->onDelete('cascade');
+            $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('cascade');
+            $table->foreignId('brand_id')->nullable()->constrained('brands')->onDelete('cascade');
 
             $table->timestamps();
         });

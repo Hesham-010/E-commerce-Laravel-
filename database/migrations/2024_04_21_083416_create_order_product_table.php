@@ -13,15 +13,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('order_product', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('UUID()'));
+            $table->id()->autoIncrement();
             $table->integer('quantity')->default(1);
             $table->float('unitPrice');
 
-            $table->uuid('order_id');
-            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
 
-            $table->uuid('product_id');
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
 
             $table->timestamps();
         });

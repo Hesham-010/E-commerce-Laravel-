@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('coupons', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('UUID()'));
+            $table->id()->autoIncrement();
             $table->date('expire');
             $table->float('discount');
             $table->integer('code');

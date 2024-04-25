@@ -42,7 +42,7 @@
                                 <label for="name">Name</label>
                                 <input type="text" name="name" id="name" class="form-control @error('name')
                                     is-invalid
-                                    @enderror" placeholder="{{$subCategory->name}}">
+                                    @enderror" placeholder="SubCategory Name">
                                 @error('name')
                                 <p class="invalid-feedback">{{$message}}</p>
                                 @enderror

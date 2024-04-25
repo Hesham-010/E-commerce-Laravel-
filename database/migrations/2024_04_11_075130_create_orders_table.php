@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('UUID()'));
+            $table->id()->autoIncrement();;
             $table->integer('key');
             $table->enum('orderState',['pending','processing','completed','canceled']);
             $table->float('totalPrice');
@@ -22,11 +22,9 @@ return new class extends Migration
             $table->string('city');
             $table->string('street');
 
-            $table->uuid('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 
-            $table->uuid('coupon_id');
-            $table->foreign('coupon_id')->references('id')->on('coupons');
+            $table->foreignId('coupon_id')->nullable()->constrained('coupons');
 
             $table->timestamps();
         });

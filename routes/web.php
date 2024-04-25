@@ -4,6 +4,8 @@ use App\Http\Controllers\admin\AdminLoginController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\HomeController;
+use App\Http\Controllers\admin\ProductController;
+use App\Http\Controllers\admin\ProductSubCategoryController;
 use App\Http\Controllers\admin\SubCategoriesController;
 use Illuminate\Support\Facades\Route;
 
@@ -54,12 +56,16 @@ Route::prefix('admin')->group(function (){
 
         // Products Routes
         Route::prefix('products')->group(function (){
-//            Route::get('/',[BrandController::class,'index'])->name('brands');
-//            Route::get('/create',[BrandController::class,'create'])->name('brands.create');
-//            Route::post('/store',[BrandController::class,'store'])->name('brands.store');
-//            Route::get('/{brandId}/edit',[BrandController::class,'edit'])->name('brands.edit');
-//            Route::PUT('/{brandId}/update',[BrandController::class,'update'])->name('brands.update');
-//            Route::get('/{brandId}/delete',[BrandController::class,'destroy'])->name('brands.delete');
+            Route::get('/',[ProductController::class,'index'])->name('products');
+            Route::get('/create',[ProductController::class,'create'])->name('products.create');
+            Route::post('/store',[ProductController::class,'store'])->name('products.store');
+            Route::get('/{productId}/edit',[ProductController::class,'edit'])->name('products.edit');
+            Route::PUT('/{productId}/update',[ProductController::class,'update'])->name('products.update');
+            Route::get('/{productId}/delete',[ProductController::class,'destroy'])->name('products.destroy');
+
+            Route::get('/product-subcategories',[ProductSubCategoryController::class,'index'])->name('product-subcategories.index');
+
         });
     });
 });
+

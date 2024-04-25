@@ -40,7 +40,6 @@ class CategoryController extends Controller
 
             $filename = Str::uuid() . '.' . $image->getClientOriginalExtension();
 
-
             $image_path = $image->storeAs('categories',$filename,'public');
 
             Category::query()->create([

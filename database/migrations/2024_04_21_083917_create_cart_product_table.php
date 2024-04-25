@@ -13,15 +13,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cart_product', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('UUID()'));
+            $table->id()->autoIncrement();
             $table->integer('quantity')->default(1);
             $table->float('unitPrice');
 
-            $table->uuid('cart_id');
-            $table->foreign('cart_id')->references('id')->on('carts')->onDelete('cascade');
+            $table->foreignId('cart_id')->constrained('carts')->onDelete('cascade');
 
-            $table->uuid('product_id');
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
 
             $table->timestamps();
         });
