@@ -66,7 +66,7 @@
                 </div>
 
                 <div class="pb-5 pt-3">
-                    <button class="btn btn-primary">Create</button>
+                    <button class="btn btn-primary">Edit</button>
                     <a href="{{route('categories')}}" class="btn btn-outline-dark ml-3">Cancel</a>
                 </div>
             </form>

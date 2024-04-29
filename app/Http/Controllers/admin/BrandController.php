@@ -60,8 +60,7 @@ class BrandController extends Controller
             return redirect()->route('brands')->with('success','Brands Created');
 
         }else{
-            return redirect()->route('brands.create')
-                ->withErrors($validator);
+            return redirect()->back()->withErrors($validator)->withInput();
         }
     }
     public function edit($brandId)

@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cart_product', function (Blueprint $table) {
+        Schema::create('cart_products', function (Blueprint $table) {
             $table->id()->autoIncrement();
             $table->integer('quantity')->default(1);
             $table->float('unitPrice');

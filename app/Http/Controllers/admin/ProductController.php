@@ -44,7 +44,6 @@ class ProductController extends Controller
             'color' => 'required',
             'qty' => 'required',
             'category' => 'required',
-            'sub_category' => 'required',
             'brand' => 'required',
         ]);
 
@@ -73,8 +72,7 @@ class ProductController extends Controller
             return redirect()->route('products')->with('success','Product Created');
 
         }else{
-            return redirect()->route('products.create')
-                ->withErrors($validator);
+            return redirect()->back()->withErrors($validator)->withInput();
         }
     }
 
@@ -135,8 +133,7 @@ class ProductController extends Controller
             return redirect()->route('products')->with('success','Product Updated');
 
         }else{
-            return redirect()->route('products.edit',$productId)
-                ->withErrors($validator);
+            return redirect()->back()->withErrors($validator)->withInput();
         }
     }
 

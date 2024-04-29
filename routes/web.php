@@ -3,17 +3,33 @@
 use App\Http\Controllers\admin\AdminLoginController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\CategoryController;
+use App\Http\Controllers\admin\CouponController;
 use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\ProductSubCategoryController;
 use App\Http\Controllers\admin\SubCategoriesController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\FrontController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Front Routes
+Route::get('/', [FrontController::class,'home']);
 
+Route::get('/home', [FrontController::class,'home'])->name('home');
 
+Route::get('/shop', [FrontController::class,'shop'])->name('shop')->middleware('auth');
+
+// Cart Routes
+Route::prefix('cart')->group(function (){
+    Route::post('/add', [CartController::class,'add'])->name('cart.add')->middleware('auth');
+    Route::get('/{productId}/delete', [CartController::class,'delete'])->name('cart.delete')
+        ->middleware('auth');
+    Route::PUT('/update', [CartController::class,'update'])->name('cart.update')->middleware('auth');
+    Route::get('/', [CartController::class,'show'])->name('cart.show')->middleware('auth');
+    });
+
+// Admin Routs
 Route::prefix('admin')->group(function (){
     Route::middleware('admin.guest')->group(function (){
         Route::get('/login',[AdminLoginController::class,'index'])->name('admin.login');
@@ -64,8 +80,28 @@ Route::prefix('admin')->group(function (){
             Route::get('/{productId}/delete',[ProductController::class,'destroy'])->name('products.destroy');
 
             Route::get('/product-subcategories',[ProductSubCategoryController::class,'index'])->name('product-subcategories.index');
+        });
 
+        // Coupons Routes
+        Route::prefix('coupons')->group(function (){
+            Route::get('/',[CouponController::class,'index'])->name('coupons');
+            Route::get('/create',[CouponController::class,'create'])->name('coupons.create');
+            Route::post('/store',[CouponController::class,'store'])->name('coupons.store');
+            Route::get('/{couponId}/edit',[CouponController::class,'edit'])->name('coupons.edit');
+            Route::PUT('/{couponId}/update',[CouponController::class,'update'])->name('coupons.update');
+            Route::get('/{couponId}/destroy',[CouponController::class,'destroy'])->name('coupons.destroy');
         });
     });
 });
 
+//Route::get('/dashboard', function () {
+//    return view('dashboard');
+//})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';

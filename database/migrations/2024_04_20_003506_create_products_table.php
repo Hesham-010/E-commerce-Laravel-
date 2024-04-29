@@ -15,11 +15,12 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('imageCover');
-            $table->double('price');
+            $table->double('price')->default(0);
             $table->string('color');
             $table->integer('quantity');
             $table->integer('sold')->default(0);
             $table->integer('status')->default(1);
+            $table->integer('average_rating')->default(0);
 
             $table->foreignId('sub_category_id')->constrained('sub_categories')->onDelete('cascade');
             $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('cascade');

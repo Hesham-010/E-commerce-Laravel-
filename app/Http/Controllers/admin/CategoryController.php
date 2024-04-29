@@ -51,9 +51,7 @@ class CategoryController extends Controller
             return redirect()->route('categories')->with('success','Category Created');
 
         }else{
-            return redirect()->route('categories.create')
-                ->withErrors($validator)
-                ->withInput($request->only('title'));
+            return redirect()->back()->withErrors($validator)->withInput();
         }
     }
 
@@ -89,9 +87,7 @@ class CategoryController extends Controller
             return redirect()->route('categories')->with('success','Category Updated');
 
         }else{
-            return redirect()->route('categories.edit')
-                ->withErrors($validator)
-                ->withInput($request->only('title'));
+            return redirect()->back()->withErrors($validator)->withInput();
         }
     }
 

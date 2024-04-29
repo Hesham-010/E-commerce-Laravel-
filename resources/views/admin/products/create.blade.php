@@ -199,7 +199,6 @@
             // عند تغيير قيمة الـ "Category"
             $('#category').change(function(){
                 var categoryId = $(this).val();
-
                 $.ajax({
                     url: '{{route('product-subcategories.index')}}',
                     type: 'get',

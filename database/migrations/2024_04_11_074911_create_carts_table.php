@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('carts', function (Blueprint $table) {
             $table->id()->autoIncrement();
-            $table->float('totalPrice');
+            $table->float('totalPrice')->default(0);
 
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 
