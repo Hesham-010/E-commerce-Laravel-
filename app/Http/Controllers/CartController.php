@@ -92,4 +92,19 @@ class CartController extends Controller
 
            return redirect()->route('cart.show');
     }
+
+    public function clear()
+    {
+        $user = Auth::user();
+
+        if ($user) {
+            $cart = $user->cart;
+
+            if ($cart) {
+                Cart_Products::where('cart_id',$cart->id)->delete();
+            }
+        }
+        $this->cartPrice($cart);
+        return redirect()->route('cart.show');
+    }
 }

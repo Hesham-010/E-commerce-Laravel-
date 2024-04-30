@@ -87,6 +87,11 @@
                     </div>
                 </div>
                 </form>
+                <br>
+                <form action="{{ route('cart.clear') }}" method="post">
+                    @csrf
+                    <button type="submit" class="primary-btn">Clear Cart</button>
+                </form>
             </div>
             <div class="col-lg-4">
                 <div class="cart__discount">
@@ -106,7 +111,15 @@
                             <li>Total <span>$ {{$cart->totalPrice}}</span></li>
                         @endif
                     </ul>
-                    <a href="#" class="primary-btn">Proceed to checkout</a>
+                    <form action="{{ route('checkout') }}" method="post">
+                        @csrf
+                        @if(!is_null($coupon))
+                        <input type="hidden" name="total_price" value="{{$cart->totalPrice * ($coupon->discount / 100)}}">
+                        @else
+                            <input type="hidden" name="total_price" value="{{$cart->totalPrice}}">
+                        @endif
+                        <button style="border: white" type="submit"  class="primary-btn">Proceed to checkout</button>
+                    </form>
                 </div>
             </div>
         </div>

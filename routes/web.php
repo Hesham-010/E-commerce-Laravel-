@@ -9,6 +9,7 @@ use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\ProductSubCategoryController;
 use App\Http\Controllers\admin\SubCategoriesController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -21,13 +22,18 @@ Route::get('/home', [FrontController::class,'home'])->name('home');
 Route::get('/shop', [FrontController::class,'shop'])->name('shop')->middleware('auth');
 
 // Cart Routes
-Route::prefix('cart')->group(function (){
-    Route::post('/add', [CartController::class,'add'])->name('cart.add')->middleware('auth');
-    Route::get('/{productId}/delete', [CartController::class,'delete'])->name('cart.delete')
-        ->middleware('auth');
-    Route::PUT('/update', [CartController::class,'update'])->name('cart.update')->middleware('auth');
-    Route::get('/', [CartController::class,'show'])->name('cart.show')->middleware('auth');
+Route::middleware('auth')->group(function (){
+    Route::prefix('cart')->group(function (){
+        Route::get('/', [CartController::class,'show'])->name('cart.show');
+        Route::post('/add', [CartController::class,'add'])->name('cart.add');
+        Route::get('/{productId}/delete', [CartController::class,'delete'])->name('cart.delete');
+        Route::PUT('/update', [CartController::class,'update'])->name('cart.update');
+        Route::post('/clear', [CartController::class,'clear'])->name('cart.clear');
     });
+
+    Route::post('/checkout', [CheckoutController::class,'checkout'])->name('checkout');
+    Route::get('/checkout/success', [CheckoutController::class,'success'])->name('checkout.success');
+});
 
 // Admin Routs
 Route::prefix('admin')->group(function (){
