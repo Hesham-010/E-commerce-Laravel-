@@ -14,6 +14,7 @@ use App\Http\Controllers\front\FrontController;
 use App\Http\Controllers\front\OrderController;
 use App\Http\Controllers\front\ProductsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 // Front Routes
@@ -42,6 +43,11 @@ Route::middleware('auth')->group(function (){
         Route::get('/{productId}/delete', [CartController::class,'delete'])->name('cart.delete');
         Route::PUT('/update', [CartController::class,'update'])->name('cart.update');
         Route::post('/clear', [CartController::class,'clear'])->name('cart.clear');
+    });
+
+    // Wishlist Routes
+    Route::prefix('wishlist')->group(function (){
+        Route::get('/add', [WishlistController::class,'add'])->name('wishlist.add');
     });
 });
 

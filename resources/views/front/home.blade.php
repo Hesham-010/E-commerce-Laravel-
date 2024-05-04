@@ -108,7 +108,7 @@
                         <div class="product__item">
                             <div class="product__item__pic set-bg" data-setbg="{{asset("imgs/$product->imageCover")}}">
                                 <ul class="product__hover">
-                                    <li><a href="{{route('shop')}}"><img src="img/icon/heart.png" alt=""></a></li>
+                                    <li><a class="class-heart" data-id="{{$product->id}}"><img src="img/icon/heart.png" alt="" ></a></li>
                                     <li><a>
                                             <form action="{{route('show')}}" method="get">
                                                 @csrf
@@ -179,6 +179,7 @@
         </div>
     </section>
     <!-- Product Section End -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function showCustomAlert(index) {
             document.querySelector('#customAlert' + index).style.display = 'block';
@@ -187,6 +188,35 @@
         function hideCustomAlert(index) {
             document.querySelector('#customAlert' + index).style.display = 'none';
         }
+    </script>
+    <script>
+        $('.class-heart').click(function(){
+            var productId = $(this).data('id');
+
+            var clickedHeart = $(this);
+
+            $.ajax({
+                url: "{{route('wishlist.add')}}",
+                type: 'get',
+                dataType: 'json',
+                data: {
+                    productId: productId,
+                },
+                success: function(response){
+                    if(response.status == true ){
+                        clickedHeart.find('img').css('background-color', 'red');
+                    }else {
+                        clickedHeart.find('img').css('background-color', 'white');
+                    }
+                    // Success callback function
+                    console.log(response);
+                },
+                error: function(error){
+                    // Error callback function
+                    console.log('err',error.responseText)
+                }
+            });
+        });
     </script>
 @endsection
 
