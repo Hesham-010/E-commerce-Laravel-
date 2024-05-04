@@ -9,6 +9,17 @@ use Illuminate\Support\Facades\Auth;
 
 class WishlistController extends Controller
 {
+    public function index()
+    {
+        $wishlists = Wishlist::where('user_id', Auth::user()->id)->get();
+
+        $products = $wishlists->map(function ($wishlist) {
+            return $wishlist->product;
+        });
+
+        return view('front.wishlist',['products' => $products]);
+    }
+
     public function add(Request $request)
     {
         if (!empty($request->productId)) {
@@ -37,4 +48,6 @@ class WishlistController extends Controller
             ]);
         }
     }
+
+
 }

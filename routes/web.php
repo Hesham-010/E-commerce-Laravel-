@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function (){
 
     // Wishlist Routes
     Route::prefix('wishlist')->group(function (){
+        Route::get('/', [WishlistController::class,'index'])->name('wishlists');
         Route::get('/add', [WishlistController::class,'add'])->name('wishlist.add');
     });
 });

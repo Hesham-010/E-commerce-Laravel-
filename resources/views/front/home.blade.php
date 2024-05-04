@@ -108,7 +108,13 @@
                         <div class="product__item">
                             <div class="product__item__pic set-bg" data-setbg="{{asset("imgs/$product->imageCover")}}">
                                 <ul class="product__hover">
-                                    <li><a class="class-heart" data-id="{{$product->id}}"><img src="img/icon/heart.png" alt="" ></a></li>
+                                        <?php
+                                        $productIds = [];
+                                        foreach (\Illuminate\Support\Facades\Auth::user()->wishlist as $whishlist){
+                                            array_push($productIds, $whishlist->product_id);
+                                        }
+                                        ?>
+                                    <li><a class="class-heart" data-id="{{$product->id}}"><img @if(in_array($product->id, $productIds)) style="background-color: red" @endif src="img/icon/heart.png" alt="" ></a></li>
                                     <li><a>
                                             <form action="{{route('show')}}" method="get">
                                                 @csrf

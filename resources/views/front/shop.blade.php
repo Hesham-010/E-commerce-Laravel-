@@ -113,7 +113,13 @@
                         <div class="product__item">
                             <div class="product__item__pic set-bg" data-setbg="{{asset("imgs/$product->imageCover")}}">
                                 <ul class="product__hover">
-                                    <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+                                    <?php
+                                        $productIds = [];
+                                        foreach (\Illuminate\Support\Facades\Auth::user()->wishlist as $whishlist){
+                                            array_push($productIds, $whishlist->product_id);
+                                        }
+                                    ?>
+                                    <li><a class="class-heart" data-id="{{$product->id}}"><img @if(in_array($product->id, $productIds)) style="background-color: red" @endif src="img/icon/heart.png" alt="" ></a></li>
                                     <li><a>
                                             <form action="{{route('show')}}" method="get">
                                                 @csrf
@@ -196,6 +202,35 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    $('.class-heart').click(function(){
+        var productId = $(this).data('id');
+
+        var clickedHeart = $(this);
+
+        $.ajax({
+            url: "{{route('wishlist.add')}}",
+            type: 'get',
+            dataType: 'json',
+            data: {
+                productId: productId,
+            },
+            success: function(response){
+                if(response.status == true ){
+                    clickedHeart.find('img').css('background-color', 'red');
+                }else {
+                    clickedHeart.find('img').css('background-color', 'white');
+                }
+                // Success callback function
+                console.log(response);
+            },
+            error: function(error){
+                // Error callback function
+                console.log('err',error.responseText)
+            }
+        });
+    });
+</script>
+<script>
     $(document).ready(function(){
         // Move the variable declaration inside the change event handler
         $('#sort').change(function(){
@@ -207,7 +242,6 @@
         });
     });
 </script>
-
 <script>
     // دالة لعرض نافذة الـ alert المخصصة
     function showCustomAlert(index) {
