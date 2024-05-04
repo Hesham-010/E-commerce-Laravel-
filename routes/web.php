@@ -10,19 +10,32 @@ use App\Http\Controllers\admin\ProductSubCategoryController;
 use App\Http\Controllers\admin\SubCategoriesController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\FrontController;
+use App\Http\Controllers\front\FrontController;
+use App\Http\Controllers\front\OrderController;
+use App\Http\Controllers\front\ProductsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 // Front Routes
 Route::get('/', [FrontController::class,'home']);
-
 Route::get('/home', [FrontController::class,'home'])->name('home');
 
-Route::get('/shop', [FrontController::class,'shop'])->name('shop')->middleware('auth');
 
-// Cart Routes
 Route::middleware('auth')->group(function (){
+    Route::get('/shop', [FrontController::class,'shop'])->name('shop');
+    Route::get('/show', [ProductsController::class,'show'])->name('show');
+
+    // checkout Route
+    Route::post('/{orderId}/checkout-session', [CheckoutController::class,'checkout_session'])->name('checkout-session');
+    Route::get('/checkout-session/success', [CheckoutController::class,'success'])->name('checkout-session.success');
+
+    // Order Routes
+    Route::prefix('order')->group(function (){
+        Route::get('/', [OrderController::class,'show'])->name('order.show');
+        Route::post('/create', [OrderController::class,'create'])->name('order.create');
+    });
+
+    // Cart Routes
     Route::prefix('cart')->group(function (){
         Route::get('/', [CartController::class,'show'])->name('cart.show');
         Route::post('/add', [CartController::class,'add'])->name('cart.add');
@@ -30,9 +43,6 @@ Route::middleware('auth')->group(function (){
         Route::PUT('/update', [CartController::class,'update'])->name('cart.update');
         Route::post('/clear', [CartController::class,'clear'])->name('cart.clear');
     });
-
-    Route::post('/checkout', [CheckoutController::class,'checkout'])->name('checkout');
-    Route::get('/checkout/success', [CheckoutController::class,'success'])->name('checkout.success');
 });
 
 // Admin Routs

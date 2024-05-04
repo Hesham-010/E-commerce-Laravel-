@@ -16,6 +16,8 @@ return new class extends Migration
             $table->id()->autoIncrement();
             $table->integer('quantity')->default(1);
             $table->float('unitPrice');
+            $table->enum('size', ['xxxl','xxl', 'xl', 'l','m', 's'])->default('xl');
+            $table->json('color')->nullable();
 
             $table->foreignId('cart_id')->constrained('carts')->onDelete('cascade');
 

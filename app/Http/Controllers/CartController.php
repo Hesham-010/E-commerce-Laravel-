@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
 {
@@ -19,53 +20,65 @@ class CartController extends Controller
 
     public function add(Request $request)
     {
-        $user = Auth::user();
-        $cart = Cart::where('user_id',$user->id)->first();
-        $product = Product::find($request->product_id);
+            $user = Auth::user();
+            $cart = Cart::where('user_id',$user->id)->first();
+            $product = Product::find($request->productId);
 
-        if(empty($cart)){
-            $cart = new Cart();
-            $cart->user_id = $user->id;
-            $cart->save();
-        }
-
-        $cart_product = new Cart_Products();
-        $cart_product->cart_id = $cart->id;
-        $cart_product->product_id = $request->product_id;
-        $cart_product->unitPrice = $product->price;
-
-        if(!empty($request->quantity)){
-            if($product->quantity < $request->quantity){
-                return 'This Quantity not exists';
+            if(empty($cart)){
+                $cart = new Cart();
+                $cart->user_id = $user->id;
+                $cart->save();
             }
-            $cart_product->quantity = $request->quantity;
-            $totalPrice = $request->quantity * $product->price;
-            $cart->totalPrice = $cart->totalPrice + $totalPrice;
-        }
 
-        $totalPrice =$product->price;
-        $cart->totalPrice = $cart->totalPrice + $totalPrice;
+            $cart_product = new Cart_Products();
+            $cart_product->cart_id = $cart->id;
+            $cart_product->product_id = $request->productId;
+            $cart_product->unitPrice = $product->price;
+            if(!empty($request->color)){
+                $cart_product->color = json_encode($request->color);
+            }
 
-        $cart_product->save();
-        $cart->save();
+            if(!empty($request->size)){
+                $cart_product->size = $request->size;
+            }
+
+            if(!empty($request->quantity) && $request->quantity != 0 ){
+                if($product->quantity < $request->quantity){
+                    abort(403,'This Quantity not exists');
+                }
+                $totalPrice = $request->quantity * $cart_product->unitPrice;
+                $cart_product->quantity = $request->quantity;
+                $totalCartPrice = $cart->totalPrice + $totalPrice;
+                $cart->totalPrice = $totalCartPrice;
+            }else{
+                $totalCartPrice = $product->price;
+                $cart->totalPrice = $cart->totalPrice + $totalCartPrice;
+            }
+
+            $cart_product->save();
+            $cart->save();
+
+            return redirect()->back();
     }
 
     public function show(Request $request)
     {
-        $cart = Cart::where('user_id',Auth::user()->id)->first();
+        $cart = Auth::user()->cart;
+
+        if(empty($cart)){
+            $cart = Cart::create(['user_id' => Auth::user()->id]);
+        }
 
         if(!empty($request->code)){
             $coupon = Coupon::where('code',$request->code)->first();
 
             if($coupon->expire > Carbon::today()){
-                return view('front.shopping-cart',[
-                    'cart' => $cart,
-                    'coupon' => $coupon
-                ]);
+                return view('front.shopping-cart',['cart' => $cart,'coupon' => $coupon]);
             }else{
                 abort(403, 'Coupon has expired');
             }
         }
+
         return view('front.shopping-cart',['cart' => $cart,'coupon' => null]);
     }
 

@@ -7,15 +7,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('order_product', function (Blueprint $table) {
+        Schema::create('order_products', function (Blueprint $table) {
             $table->id()->autoIncrement();
             $table->integer('quantity')->default(1);
             $table->float('unitPrice');
+            $table->enum('size', ['xxxl','xxl', 'xl', 'l','m', 's']);
+            $table->json('color')->nullable();
 
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
 
@@ -25,9 +24,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('order_product');

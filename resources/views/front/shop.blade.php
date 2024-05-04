@@ -46,7 +46,6 @@
                                                         <li><a href="{{route('shop')}}?category={{ $category->id }}">{{$category->title}}</a></li>
                                                     @endforeach
                                                 @endif
-
                                             </ul>
                                         </div>
                                     </div>
@@ -89,38 +88,6 @@
                                     </div>
                                 </div>
                             </div>
-{{--                            <div class="card">--}}
-{{--                                <div class="card-heading">--}}
-{{--                                    <a data-toggle="collapse" data-target="#collapseFour">Size</a>--}}
-{{--                                </div>--}}
-{{--                                <div id="collapseFour" class="collapse show" data-parent="#accordionExample">--}}
-{{--                                    <div class="card-body">--}}
-{{--                                        <div class="shop__sidebar__size">--}}
-{{--                                            <label for="sm">s--}}
-{{--                                                <input type="radio" id="sm">--}}
-{{--                                            </label>--}}
-{{--                                            <label for="md">m--}}
-{{--                                                <input type="radio" id="md">--}}
-{{--                                            </label>--}}
-{{--                                            <label for="xl">xl--}}
-{{--                                                <input type="radio" id="xl">--}}
-{{--                                            </label>--}}
-{{--                                            <label for="2xl">2xl--}}
-{{--                                                <input type="radio" id="2xl">--}}
-{{--                                            </label>--}}
-{{--                                            <label for="xxl">xxl--}}
-{{--                                                <input type="radio" id="xxl">--}}
-{{--                                            </label>--}}
-{{--                                            <label for="3xl">3xl--}}
-{{--                                                <input type="radio" id="3xl">--}}
-{{--                                            </label>--}}
-{{--                                            <label for="4xl">4xl--}}
-{{--                                                <input type="radio" id="4xl">--}}
-{{--                                            </label>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
                         </div>
                     </div>
                 </div>
@@ -131,10 +98,9 @@
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="shop__product__option__right">
                                 <p>Sort by Price:</p>
-                                <select>
-                                    <option value="">Low To High</option>
-                                    <option value="">$0 - $55</option>
-                                    <option value="">$55 - $100</option>
+                                <select  name="sort" id="sort">
+                                    <option value="asc">Low To High</option>
+                                    <option value="desc">High To Low</option>
                                 </select>
                             </div>
                         </div>
@@ -142,17 +108,70 @@
                 </div>
                 <div class="row">
                 @if(!empty($brands))
-                    @foreach($products as $product)
+                    @foreach($products as $index => $product)
                     <div class="col-lg-4 col-md-6 col-sm-6">
                         <div class="product__item">
                             <div class="product__item__pic set-bg" data-setbg="{{asset("imgs/$product->imageCover")}}">
                                 <ul class="product__hover">
                                     <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+                                    <li><a>
+                                            <form action="{{route('show')}}" method="get">
+                                                @csrf
+                                                <input type="hidden" name="productId" value="{{$product->id}}">
+                                                <img src="img/icon/compare.png" alt="" style="cursor: pointer;" onclick="this.closest('form').submit();" />
+                                            </form>
+                                    </a></li>
                                 </ul>
                             </div>
                             <div class="product__item__text">
                                 <h6>{{$product->title}}</h6>
-                                <a href="#" class="add-cart">+ Add To Cart</a>
+                                <a onclick="showCustomAlert({{ $index }})">+ Add To Cart</a>
+                                <div class="custom-alert" id="customAlert{{ $index }}">
+                                    <span class="close" onclick="hideCustomAlert({{$index}})">&times;</span>
+                                    <form action="{{route('cart.add')}}" method="post">
+                                        @csrf
+                                        <span>Quantity:</span>
+                                        <div class="quantity">
+                                            <div class="pro-qty">
+                                                <input type="text" name="quantity" value="1">
+                                            </div>
+                                        </div>
+                                        <span>Size:</span><br>
+                                        <select name="size">
+                                            <option value="s">S</option>
+                                            <option value="m">M</option>
+                                            <option value="l">L</option>
+                                            <option value="xl">XL</option>
+                                            <option value="xxl">XXL</option>
+                                            <option value="xxxl">XXXL</option>
+                                        </select>
+
+                                        <br><br>
+                                        <div class="product__details__option__color">
+                                            <span>Color:</span>
+                                            <label class="c-1" for="sp-1">
+                                                <input type="checkbox" id="sp-1" name="color[]" value="black">
+                                            </label>
+                                            <label class="c-2" for="sp-2">
+                                                <input type="checkbox" id="sp-2" name="color[]" value="blue">
+                                            </label>
+                                            <label class="c-3" for="sp-3">
+                                                <input type="checkbox" id="sp-3" name="color[]" value="orange">
+                                            </label>
+                                            <label class="c-4" for="sp-4">
+                                                <input type="checkbox" id="sp-4" name="color[]" value="red">
+                                            </label>
+                                            <label class="c-9" for="sp-9">
+                                                <input type="checkbox" id="sp-9" name="color[]" value="white">
+                                            </label>
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <input name="productId" type="hidden" value="{{$product->id}}">
+                                        <!-- زر الإرسال -->
+                                        <button type="submit">Submit</button>
+                                    </form>
+                                </div>
                                 <div class="rating">
                                     @for($i=1; $i <= $product->average_rating; $i++)
                                         <i class="fa fa-star"></i>
@@ -163,7 +182,6 @@
                         </div>
                     </div>
                     @endforeach
-
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
@@ -175,5 +193,30 @@
         </div>
     </div>
 </section>
-<!-- Shop Section End -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        // Move the variable declaration inside the change event handler
+        $('#sort').change(function(){
+            // Get the selected sort option when the option changes
+            var sort_option = $(this).val();
+            console.log(sort_option);
+            // Navigate to the appropriate route
+            window.location.href = '/shop?sort=' + sort_option;
+        });
+    });
+</script>
+
+<script>
+    // دالة لعرض نافذة الـ alert المخصصة
+    function showCustomAlert(index) {
+        document.querySelector('#customAlert' + index).style.display = 'block';
+    }
+
+    // دالة لإخفاء نافذة الـ alert المخصصة
+    function hideCustomAlert(index) {
+        document.querySelector('#customAlert' + index).style.display = 'none';
+    }
+</script>
 @endsection

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\front;
 
+use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
@@ -39,8 +40,12 @@ class FrontController extends Controller
             $products = $products->whereBetween('price', [$request->get('price_from'), $request->get('price_to')]);
         }
 
+        if($request->input('sort')) {
+            $products = Product::orderBy('price', $request->input('sort'));
+        }
+
         return view('front.shop',[
-            'products' => $products->paginate(12),
+            'products' => $products->paginate(15),
             'categories' => $categories,
             'brands' => $brands,
         ]);

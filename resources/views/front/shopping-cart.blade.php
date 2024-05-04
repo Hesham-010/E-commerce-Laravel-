@@ -94,31 +94,35 @@
                 </form>
             </div>
             <div class="col-lg-4">
-                <div class="cart__discount">
-                    <h6>Discount codes</h6>
-                    <form action="{{route('cart.show')}}">
-                        <input type="number" name="code" placeholder="Coupon code">
-                        <button type="submit">Apply</button>
-                    </form>
-                </div>
+                    <div class="cart__discount">
+                        <h6>Discount codes</h6>
+                        <form action="{{route('cart.show')}}"  method="get">
+                            <input name="code" type="text" placeholder="Coupon code">
+                            <button type="submit">Apply</button>
+                        </form>
+                    </div>
                 <div class="cart__total">
                     <h6>Cart total</h6>
                     <ul>
                         <li>Subtotal <span>$ {{$cart->totalPrice}}</span></li>
                         @if(!is_null($coupon))
-                        <li>Total <span>$ {{$cart->totalPrice * ($coupon->discount / 100)}}</span></li>
+                            <?php
+                                $totalDiscount = $cart->totalPrice * $coupon->discount / 100
+                                ?>
+                            <li>Total <span>$ {{$cart->totalPrice - $totalDiscount }}</span></li>
                         @else
                             <li>Total <span>$ {{$cart->totalPrice}}</span></li>
                         @endif
                     </ul>
-                    <form action="{{ route('checkout') }}" method="post">
+                    <form action="{{route('order.create')}}" method="post">
                         @csrf
+                        <input name="cart" type="hidden" value="{{$cart}}">
                         @if(!is_null($coupon))
-                        <input type="hidden" name="total_price" value="{{$cart->totalPrice * ($coupon->discount / 100)}}">
-                        @else
-                            <input type="hidden" name="total_price" value="{{$cart->totalPrice}}">
+                            <input name="couponId" type="hidden" value="{{$coupon->id}}">
                         @endif
-                        <button style="border: white" type="submit"  class="primary-btn">Proceed to checkout</button>
+                        <button style="border: white" type="submit" class="primary-btn">
+                            Create Order
+                        </button>
                     </form>
                 </div>
             </div>

@@ -103,17 +103,68 @@
                 </div>
             </div>
             <div class="row product__filter">
-                @foreach($products as $product)
+                @foreach($products as $index => $product)
                     <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix">
                         <div class="product__item">
                             <div class="product__item__pic set-bg" data-setbg="{{asset("imgs/$product->imageCover")}}">
                                 <ul class="product__hover">
                                     <li><a href="{{route('shop')}}"><img src="img/icon/heart.png" alt=""></a></li>
+                                    <li><a>
+                                            <form action="{{route('show')}}" method="get">
+                                                @csrf
+                                                <input type="hidden" name="productId" value="{{$product->id}}">
+                                                <img src="img/icon/compare.png" alt="" style="cursor: pointer;" onclick="this.closest('form').submit();" />
+                                            </form>
+                                        </a></li>
                                 </ul>
                             </div>
                             <div class="product__item__text">
                                 <h6>{{$product->title}}</h6>
-                                <a class="add-to-cart" data-product-id="{{ $product->id }}">+ Add To Cart</a>
+                                <a onclick="showCustomAlert({{ $index }})">+ Add To Cart</a>
+
+                                <div class="custom-alert" id="customAlert{{ $index }}">
+                                    <span class="close" onclick="hideCustomAlert()">&times;</span>
+                                    <form action="{{route('cart.add')}}" method="post">
+                                        @csrf
+                                        <div class="quantity">
+                                            <div class="pro-qty">
+                                                <input type="text" name="quantity" value="1">
+                                            </div>
+                                        </div>
+                                        <select name="size">
+                                            <option value="s">S</option>
+                                            <option value="m">M</option>
+                                            <option value="l">L</option>
+                                            <option value="xl">XL</option>
+                                            <option value="xxl">XXL</option>
+                                            <option value="xxxl">XXXL</option>
+                                        </select>
+                                        <br><br>
+                                        <div class="product__details__option__color">
+                                            <span>Color:</span>
+                                            <label class="c-1" for="sp-1">
+                                                <input type="checkbox" id="sp-1" name="color[]" value="black">
+                                            </label>
+                                            <label class="c-2" for="sp-2">
+                                                <input type="checkbox" id="sp-2" name="color[]" value="blue">
+                                            </label>
+                                            <label class="c-3" for="sp-3">
+                                                <input type="checkbox" id="sp-3" name="color[]" value="orange">
+                                            </label>
+                                            <label class="c-4" for="sp-4">
+                                                <input type="checkbox" id="sp-4" name="color[]" value="red">
+                                            </label>
+                                            <label class="c-9" for="sp-9">
+                                                <input type="checkbox" id="sp-9" name="color[]" value="white">
+                                            </label>
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <input name="productId" type="hidden" value="{{$product->id}}">
+                                        <!-- زر الإرسال -->
+                                        <button type="submit">Submit</button>
+                                    </form>
+                                </div>
                                 <div class="rating">
                                     @for($i=1; $i <= $product->average_rating; $i++)
                                         <i class="fa fa-star"></i>
@@ -128,30 +179,14 @@
         </div>
     </section>
     <!-- Product Section End -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-        $(document).ready(function(){
-            $('.add-to-cart').click(function(e){
-                e.preventDefault();
-                var productId = $(this).data('product-id');
-                $.ajax({
-                    type:'POST',
-                    url:'{{ route('cart.add') }}',
-                    data:{
-                        product_id: productId,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success:function(data){
-                        console.log(data)
-                        alert('Item added to cart successfully!');
-                    },
-                    error:function(err){
-                        console.log('err:',err)
-                        // alert('Something Went Wrong');
-                    }
-                });
-            });
-        });
+        function showCustomAlert(index) {
+            document.querySelector('#customAlert' + index).style.display = 'block';
+        }
+
+        function hideCustomAlert(index) {
+            document.querySelector('#customAlert' + index).style.display = 'none';
+        }
     </script>
 @endsection
 
