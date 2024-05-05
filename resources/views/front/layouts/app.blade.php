@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="css/style.css" type="text/css">
     <link rel="stylesheet" href="css/style.css" type="text/css">
     <link rel="stylesheet" href="css/my-style.css" type="text/css">
+    <link rel="stylesheet" href="css/profile.css" type="text/css">
     <style>
         /* تخصيص نافذة الـ alert */
         .custom-alert {
@@ -91,11 +92,7 @@
                                     @auth
                                     <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <x-dropdown-link :href="route('logout')"
-                                         onclick="event.preventDefault();
-                                              this.closest('form').submit();">
-                                                  {{ __('Log Out') }}
-                                    </x-dropdown-link>
+                                            <a onclick="this.closest('form').submit();">Log Out</a>
                                     </form>
                                     @else
                                         <a href="{{ route('login') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Log in</a>
@@ -125,8 +122,13 @@
                     <ul>
                         <li><a href="{{route('home')}}">Home</a></li>
                         <li><a href="{{route('shop')}}">Shop</a></li>
-                        <li><a href="{{route('cart.show')}}">Shopping Cart</a></li>
-                        <li><a href="{{route('order.show')}}">My Orders</a></li>
+                        <li><a href="#">Pages</a>
+                            <ul class="dropdown">
+                                <li><a href="{{route('cart.show')}}">Shopping Cart</a></li>
+                                <li><a href="{{route('order.show')}}">My Orders</a></li>
+                                <li><a href="{{route('profile.edit')}}">My Profile</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -149,9 +151,10 @@
                     </a>
                     <div class="price">${{ Auth::user() && Auth::user()->cart ? Auth::user()->cart->totalPrice : '0.00' }}
                     </div>
-                </div>
             </div>
         </div>
+    </div>
+
         <div class="canvas__open"><i class="fa fa-bars"></i></div>
     </div>
 </header>
